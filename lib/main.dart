@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:udemy_crash_course/result.dart';
 
-import './question.dart';
-import './answer.dart';
-
+import 'quiz.dart';
 // void main() {
 //   runApp(MyApp());
 // }
@@ -18,7 +17,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final questions = const [
+  final _questions = const [
     {
       'questionText': 'What\'s your Anime ?',
       'answers': ['One Piece', 'Naruto', 'Bleach', 'Demon Slayer'],
@@ -38,6 +37,7 @@ class _MyAppState extends State<MyApp> {
     },
   ];
   var _questionIndex = 0;
+  var _totalScore = 0;
 
   void _answerQuestion() {
     // var aBool = true;
@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
       _questionIndex = _questionIndex + 1;
     });
     print(_questionIndex);
-    if (_questionIndex < questions.length) {
+    if (_questionIndex < _questions.length) {
       print('We have more questions!');
     } else {
       print('No more questions!');
@@ -56,40 +56,22 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // var dummy = const ['Hello'];
-    // dummy.add('Max');
-    // print(dummy);
-    // dummy = [];
-    // questions = []; // does not work if questions is a const
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Flutter Udemy Crash Course Maximilliam',
-            style: TextStyle(color: Colors.yellow, fontSize: 15),
+          appBar: AppBar(
+            title: Text(
+              'Flutter Udemy Crash Course Maximilliam',
+              style: TextStyle(color: Colors.yellow, fontSize: 15),
+            ),
           ),
-        ),
-        body: _questionIndex < questions.length
-            ? Column(
-                children: [
-                  Question(
-                    questions[_questionIndex]['questionText'],
-                  ),
-                  ...(questions[_questionIndex]['answers'] as List<String>)
-                      .map((answer) {
-                    return Answer(_answerQuestion, answer);
-                  }).toList()
-                ],
-              )
-            : Center(
-                child: Text(
-                  'You did it!',
-                  style: TextStyle(color: Colors.purple),
-                ),
-              ),
-      ),
+          body: _questionIndex < _questions.length
+              ? Quiz(
+                  answerQuestions: _answerQuestion,
+                  questionIndex: _questionIndex,
+                  questions: _questions,
+                )
+              : Result(_totalScore)),
     );
   }
 }
